@@ -218,3 +218,23 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---- project-specific ------------------------------------------------------ #
+# Licensed USB-IF / WPC specifications and every derived artefact stay out of
+# the repository (see TEAM.md D-05); only the small samples are committed.
+data/raw/
+data/processed/
+data/index/
+data/graph/
+data/runs/
+data/logs/
+data/synthetic/
+eval/results/
+*.pdf
+*.zip
+!samples/**/*.json
+!samples/**/*.jsonl
+
+# virtualenvs (the template covers venv/ but not the dot form)
+.venv/
+

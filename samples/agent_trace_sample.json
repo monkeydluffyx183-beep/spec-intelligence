@@ -1,0 +1,198 @@
+{
+ "question": "What are the limits of tSenderResponse in Table 6.8?",
+ "answer": "Timer: tSenderResponse; Min: 24; Max: 30; Unit: ms; Definition: Maximum time a Sender waits before it starts to send a response to a received message [pd, \u00a76.6, p.3, Table 6.8] Table 5-9. Test cases that reference PD timers. Test case: TEST.PD.PROT.SRC.3; Timer checked: tSenderResponse, tPSTransition; Base specification reference: PD R3.2 V1.2 Table 6.8 [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.3, Table 5-9] Table 5-9. Test cases that reference PD timers. Test case: TEST.PD.PROT.SNK.1; Timer checked: tSenderResponse; Base specification reference: PD R3.0 V1.3 Table 6-8 [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.3, Table 5-9] It is the test case that verifies tSenderResponse for a Source port: check #1 measures the time from the end of the Request to the start of Accept and compares it with the limits of PD specification Table 6.8, and check #2 verifies that PS_RDY follows Accept within tPSTransition. [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.2, prose] Check #3 verifies that the Source does not exceed the maximum tSenderResponse when it is already in PE_SRC_Ready. [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.2, prose] tSenderResponse is defined in Table 6.8 [pd, R3.2 V1.2 (19 Aug 2026), \u00a76.6, p.3, prose]",
+ "citations": [
+  "[pd, \u00a76.6, p.3, Table 6.8]"
+ ],
+ "declined": false,
+ "tool_calls": 6,
+ "trace": {
+  "run_id": "run_6166e97add0b",
+  "question": "What are the limits of tSenderResponse in Table 6.8?",
+  "question_category": "table",
+  "plan": [
+   "type=table",
+   "sub-questions=1",
+   "expected_documents=any",
+   "step 1: search_text (find the table that holds the value)",
+   "step 2: get_table (read the whole table, including any continuation page)",
+   "step 3: search_text (surrounding prose for context)",
+   "note: identifiers: tSenderResponse"
+  ],
+  "steps": [
+   {
+    "step": 1,
+    "kind": "tool",
+    "name": "search_text",
+    "args": {
+     "query": "What are the limits of tSenderResponse in Table 6.8?",
+     "k": 8,
+     "tables_only": true
+    },
+    "n_hits": 8,
+    "top_score": 3.3524039215686274,
+    "observation": "[1] pd_cts \u00a75 p.3 (table, score 3.352)\n5 Test Cases\nTable 5-9. Test cases that reference PD timers\n| Test case | Timer checked | Base specification reference |\n| --- | --- | --- |\n| TEST.PD.PROT.SRC.1 | tGoodCRC | PD R3.2 V1.2 Table 6.8 |\n| TEST.PD.PROT.SRC.3 | tSenderResponse, tPSTransition | PD R3.2 V1.2 Table 6.8 |\n| TEST.PD.PROT.SNK.1 | tSenderResponse | PD R3.0 V1.3 Table 6-8 |\n| TEST.PD.PWR.",
+    "duration_s": 0.0056,
+    "tokens": 0,
+    "decision": "find the table that holds the value",
+    "citations": [],
+    "error": null
+   },
+   {
+    "step": 2,
+    "kind": "tool",
+    "name": "search_text",
+    "args": {
+     "query": "limits tsenderresponse sender response 6.8",
+     "k": 8
+    },
+    "n_hits": 8,
+    "top_score": 1.1263999999999998,
+    "observation": "[1] pd_cts \u00a75 p.3 (table, score 1.126)\n5 Test Cases\nTable 5-4. TEST.PD.PROT.SRC.3 procedure\n| Step | Action | Expected result |\n| --- | --- | --- |\n| 1 | Run TD 4.2.4 with the protocol analyser capturing every message | Capture contains Source Capabilities, _ Request, Accept, PS RDY |\n| 2 | Repeat the Request ten times from PE SRC Ready | _ Every Accept arrives inside tSenderResponse limits |\n| 3 ",
+    "duration_s": 0.0052,
+    "tokens": 0,
+    "decision": "surrounding prose for context",
+    "citations": [],
+    "error": null
+   },
+   {
+    "step": 2,
+    "kind": "reflect",
+    "name": "reflect",
+    "args": {},
+    "n_hits": 0,
+    "top_score": null,
+    "observation": "the question needs a table but no table was read",
+    "duration_s": 0.0,
+    "tokens": 0,
+    "decision": "retrieve again with a different formulation",
+    "citations": [],
+    "error": null
+   },
+   {
+    "step": 3,
+    "kind": "tool",
+    "name": "search_text",
+    "args": {
+     "query": "limits tsenderresponse sender response 6.8",
+     "k": 8
+    },
+    "n_hits": 8,
+    "top_score": 1.1263999999999998,
+    "observation": "[1] pd_cts \u00a75 p.3 (table, score 1.126)\n5 Test Cases\nTable 5-4. TEST.PD.PROT.SRC.3 procedure\n| Step | Action | Expected result |\n| --- | --- | --- |\n| 1 | Run TD 4.2.4 with the protocol analyser capturing every message | Capture contains Source Capabilities, _ Request, Accept, PS RDY |\n| 2 | Repeat t",
+    "duration_s": 0.0048,
+    "tokens": 0,
+    "decision": "reflection round 1: keyword reformulation (identifiers and units stripped)",
+    "citations": [],
+    "error": null
+   },
+   {
+    "step": 4,
+    "kind": "tool",
+    "name": "resolve_entity",
+    "args": {
+     "name": "tSenderResponse"
+    },
+    "n_hits": 0,
+    "top_score": null,
+    "observation": "Timer: tSenderResponse (pd \u00a76.6 p.3)",
+    "duration_s": 0.0053,
+    "tokens": 0,
+    "decision": "reflection round 1: canonical name for the identifier",
+    "citations": [],
+    "error": null
+   },
+   {
+    "step": 5,
+    "kind": "tool",
+    "name": "graph_query",
+    "args": {
+     "kind": "neighbors",
+     "name": "tSenderResponse",
+     "depth": 2
+    },
+    "n_hits": 12,
+    "top_score": 1.0,
+    "observation": "70 node(s), 25 edge(s)\n  Timer: tSenderResponse (pd \u00a76.6 p.3)\n  Table: Table 6.8 (pd \u00a76.6 p.3)\n  Section: \u00a76.6 Timers and Counters (pd \u00a76.6 p.3)\n  Section: \u00a78 Policy Engine (pd \u00a78 p.6)\n  Section: \u00a74.2 Source Capabilities and Request Handling (pd_cts \u00a74.2 p.2)\n  Section: \u00a75 Test Cases (pd_cts \u00a75 p.2)",
+    "duration_s": 0.0101,
+    "tokens": 0,
+    "decision": "reflection round 1: follow the identifier through the knowledge graph",
+    "citations": [],
+    "error": null
+   },
+   {
+    "step": 6,
+    "kind": "tool",
+    "name": "get_table",
+    "args": {
+     "doc_id": "pd",
+     "number": "6.8"
+    },
+    "n_hits": 1,
+    "top_score": 1.0,
+    "observation": "| Timer | Min | Max | Unit | Definition |\n| --- | --- | --- | --- | --- |\n| tSenderResponse | 24 | 30 | ms | Maximum time a Sender waits before it starts to send a response to a received message |\n| tReceiverResponse | 0 | 15 | ms | Time a Receiver has to respond with GoodCRC |\n| tGoodCRC | 0 | 195 ",
+    "duration_s": 0.0002,
+    "tokens": 0,
+    "decision": "reflection round 1: read the table the knowledge graph points at",
+    "citations": [],
+    "error": null
+   },
+   {
+    "step": 8,
+    "kind": "answer",
+    "name": "generate",
+    "args": {},
+    "n_hits": 0,
+    "top_score": null,
+    "observation": "Timer: tSenderResponse; Min: 24; Max: 30; Unit: ms; Definition: Maximum time a Sender waits before it starts to send a response to a received message [pd, \u00a76.6, p.3, Table 6.8] Table 5-9. Test cases that reference PD timers. Test case: TEST.PD.PROT.SRC.3; Timer checked: tSenderResponse, tPSTransitio",
+    "duration_s": 0.0,
+    "tokens": 2037,
+    "decision": "generated with extractive",
+    "citations": [],
+    "error": null
+   }
+  ],
+  "answer": "Timer: tSenderResponse; Min: 24; Max: 30; Unit: ms; Definition: Maximum time a Sender waits before it starts to send a response to a received message [pd, \u00a76.6, p.3, Table 6.8] Table 5-9. Test cases that reference PD timers. Test case: TEST.PD.PROT.SRC.3; Timer checked: tSenderResponse, tPSTransition; Base specification reference: PD R3.2 V1.2 Table 6.8 [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.3, Table 5-9] Table 5-9. Test cases that reference PD timers. Test case: TEST.PD.PROT.SNK.1; Timer checked: tSenderResponse; Base specification reference: PD R3.0 V1.3 Table 6-8 [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.3, Table 5-9] It is the test case that verifies tSenderResponse for a Source port: check #1 measures the time from the end of the Request to the start of Accept and compares it with the limits of PD specification Table 6.8, and check #2 verifies that PS_RDY follows Accept within tPSTransition. [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.2, prose] Check #3 verifies that the Source does not exceed the maximum tSenderResponse when it is already in PE_SRC_Ready. [pd_cts, Revision Q3 2026 (31 May 2026), \u00a75, p.2, prose] tSenderResponse is defined in Table 6.8 [pd, R3.2 V1.2 (19 Aug 2026), \u00a76.6, p.3, prose]",
+  "citations": [
+   {
+    "doc_id": "pd",
+    "revision": "",
+    "section_number": "6.6",
+    "page": 3,
+    "region": "Table 6.8",
+    "page_end": 4,
+    "element_ids": [
+     "pd:table_caption:3:71",
+     "pd:table_caption:4:77",
+     "pd:section_heading:3:72",
+     "pd:paragraph:3:73",
+     "pd:paragraph:4:111",
+     "pd:paragraph:4:112",
+     "pd:paragraph:4:113"
+    ],
+    "quote": "| Timer | Min | Max | Unit | Definition |\n| --- | --- | --- | --- | --- |\n| tSenderResponse | 24 | 30 | ms | Maximum time a Sender waits before it starts to send a response to a received message |\n| tReceiverResponse | 0 | 15 | ms | Time a ",
+    "verified": null,
+    "verification_note": ""
+   }
+  ],
+  "declined": false,
+  "decline_reason": "",
+  "confidence": 0.8381009803921569,
+  "token_usage": {
+   "total": 2037
+  },
+  "latency_s": 0.03994641400004184,
+  "config_name": "F",
+  "model": "extractive",
+  "started_at": "",
+  "hardware": {
+   "platform": "Linux-6.1.158+-x86_64-with-glibc2.36",
+   "python": "3.11.2",
+   "cpu_count": 2,
+   "ram_gb": 3.8,
+   "gpu": null,
+   "gpu_memory_mb": null
+  },
+  "warnings": []
+ }
+}

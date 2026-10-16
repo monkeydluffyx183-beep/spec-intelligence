@@ -1,0 +1,175 @@
+# Spec Intelligence configuration.
+# Every value can be overridden with an environment variable, e.g.
+#   SPECINTEL__AGENT__MAX_STEPS=12
+# Paths are resolved relative to the repository root unless absolute.
+
+paths:
+  raw: data/raw                 # licensed PDFs live here (git-ignored)
+  processed: data/processed     # element JSONL, chunks, pages, figures
+  index: data/index             # dense / BM25 / page-image indexes
+  graph: data/graph             # graph export (JSON + GraphML)
+  runs: data/runs               # agent traces and benchmark results
+  logs: data/logs
+  synthetic: data/synthetic     # generated stand-in corpus (license-free)
+
+corpus:
+  # The seven core documents of the assignment. `data/raw/<doc_id>/` holds the
+  # downloaded PDFs. When a document is missing the pipeline falls back to the
+  # synthetic stand-in of `synthetic.py` so the system stays runnable offline.
+  documents:
+    - doc_id: pd
+      title: USB Power Delivery Specification
+      revision: R3.2 V1.2 (19 Aug 2026)
+      revision_key: 3.2.1.2
+      main_file: USB_PD_R3.2_V1.2_2026_08_19.pdf
+      pages: 418
+      namespace: PD
+    - doc_id: pd_cts
+      title: USB Power Delivery Compliance Test Specification
+      revision: Revision Q3 2026 (31 May 2026)
+      revision_key: 3.2.Q3.2026
+      main_file: USB PD3 CTS Q3 2026 OR.pdf
+      pages: 334
+      namespace: TEST.PD
+    - doc_id: typec
+      title: USB Type-C Cable and Connector Specification
+      revision: Release 2.5 (March 2026)
+      revision_key: 2.5
+      main_file: USB Type-C Spec R2.5 - March 2026.pdf
+      pages: 442
+      namespace: TYPEC
+    - doc_id: typec_fts
+      title: USB Type-C Functional Test Specification
+      revision: Rev 0.91 (March 2024)
+      revision_key: 0.91
+      main_file: USB Type-C Functional Test Specification.pdf
+      pages: 140
+      namespace: TEST.TYPEC
+    - doc_id: scc_cts
+      title: USB Type-C Shared Capacity Charger Interoperability Compliance Test Specification
+      revision: v1.0 (21 Oct 2025)
+      revision_key: 1.0
+      main_file: USB Type-C Shared Capacity Charger Interoperability CTS v1.0.pdf
+      pages: 9
+      namespace: TEST.SCC
+    - doc_id: usb4
+      title: USB4 Specification
+      revision: Version 2.0 (November 2025)
+      revision_key: 2.0
+      main_file: USB4 Specification 2.0 November 2025 - CLEAN.pdf
+      pages: 839
+      namespace: USB4
+    - doc_id: tech2
+      title: Tech 2 Specification
+      revision: v2.2.1 (19 June 2025)
+      revision_key: 2.2.1
+      main_file: Tech 2 Specification v2.2.1.pdf
+      pages: 2812
+      namespace: TECH2
+
+ingest:
+  parser: auto                 # auto | pymupdf | fallback
+  ocr:
+    enabled: true
+    backend: auto              # auto | unlimited-ocr | deepseek-ocr | mock
+    endpoint: http://localhost:8000/v1   # vLLM / SGLang serving Unlimited-OCR
+    model: baidu/Unlimited-OCR
+    multi_page_window: 8       # pages per one-shot pass (long-horizon test uses 1/5/10/20)
+    dpi: 200
+    device: cuda
+    license_note: >-
+      Run on your own hardware; never upload licensed spec pages to the
+      public Hugging Face demo.
+  tables:
+    stitch_across_pages: true
+    repeat_header_rows: 1
+    min_rows: 2
+  figures:
+    min_area_ratio: 0.02
+    crop_dpi: 200
+    vlm_structuring: true
+  chunk:
+    target_tokens: 320
+    overlap_tokens: 60
+    atomic: [table, figure, figure_caption]
+
+index:
+  embedding:
+    backend: auto              # auto | hashing | ollama | sentence-transformers
+    model: BAAI/bge-small-en-v1.5
+    dim: 384
+    ollama_model: nomic-embed-text
+    batch_size: 64
+  bm25:
+    k1: 1.5
+    b: 0.75
+    identifier_boost: 3.0      # exact identifier hits (tSenderResponse, TEST.PD.*)
+  reranker:
+    backend: auto              # auto | lexical | cross-encoder | none
+    model: BAAI/bge-reranker-base
+    top_k: 20
+  page_index:
+    backend: auto              # auto | hashing | colpali
+    model: vidore/colqwen2.5-v0.1
+    patch_dim: 128
+    max_patches_per_page: 256
+    dpi: 160
+  fusion:
+    method: rrf
+    rrf_k: 60
+    weights: { text: 1.0, pages: 1.0 }
+  retrieve:
+    k: 10
+
+kg:
+  store: sqlite                # sqlite | networkx | kuzu | neo4j
+  store_path: data/graph/graph.sqlite
+  exports: [json, graphml, cypher]
+  extraction:
+    rules: true
+    llm: true
+    max_elements_per_pass: 0   # 0 = no limit
+  entity_resolution:
+    similarity_threshold: 0.86
+    strip_suffixes: ["message", "messages", "packet", "packets", "field", "fields"]
+  validation:
+    strict: true
+    require_provenance: true
+  linking:
+    flag_stale_references: true
+
+agent:
+  max_steps: 8
+  token_budget: 12000
+  tool_timeout_s: 30
+  top_k: 8
+  min_evidence_score: 0.18
+  reflect: true
+  citation_verification: true
+  deterministic: true
+  llm:
+    backend: auto              # auto | extractive | ollama | openai-compatible
+    model: qwen2.5:7b-instruct
+    endpoint: http://localhost:11434
+    temperature: 0.0
+    max_tokens: 700
+  vlm:
+    backend: auto              # auto | heuristic | ollama | openai-compatible
+    model: qwen2.5-vl:7b
+
+eval:
+  gold: eval/gold.jsonl
+  seed: eval/gold_seed.jsonl
+  results: eval/results
+  judge:
+    backend: auto              # auto | rubric | llm
+    model: llama3.1:8b-instruct
+  metrics: [recall@5, recall@10, mrr, ndcg@5, answer_correctness, faithfulness,
+            citation_accuracy, refusal_accuracy]
+  ablations: [A, B, C, D, E, F]
+
+logging:
+  level: INFO
+  format: text                 # text | json
+  file: data/logs/specintel.log
+  console: true

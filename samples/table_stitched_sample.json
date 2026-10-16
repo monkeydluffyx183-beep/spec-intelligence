@@ -1,0 +1,139 @@
+{
+ "table_id": "pd:table:tbl_e94857a647da",
+ "doc_id": "pd",
+ "revision": "R3.2 V1.2 (19 Aug 2026)",
+ "number": "6.8",
+ "caption": "Timer definitions and limits",
+ "pages": [
+  3,
+  4
+ ],
+ "headers": [
+  [
+   "Timer",
+   "Min",
+   "Max",
+   "Unit",
+   "Definition"
+  ]
+ ],
+ "rows": [
+  [
+   "tSenderResponse",
+   "24",
+   "30",
+   "ms",
+   "Maximum time a Sender waits before it starts to send a response to a received message"
+  ],
+  [
+   "tReceiverResponse",
+   "0",
+   "15",
+   "ms",
+   "Time a Receiver has to respond with GoodCRC"
+  ],
+  [
+   "tGoodCRC",
+   "0",
+   "195",
+   "\u00b5s",
+   "Maximum time to transmit GoodCRC"
+  ],
+  [
+   "tFirstSourceCap",
+   "100",
+   "200",
+   "ms",
+   "Time from the attachment of a Sink until the Source sends the first Source Capabilities"
+  ],
+  [
+   "tTypeCSinkWaitCap",
+   "310",
+   "620",
+   "ms",
+   "_ Time a Sink waits for Source Capabilities before it stops waiting"
+  ],
+  [
+   "tPSTransition",
+   "450",
+   "550",
+   "ms",
+   "_ Time for the power supply to reach the new operating point after Accept"
+  ],
+  [
+   "tPSSourceOff",
+   "750",
+   "920",
+   "ms",
+   "Time from PS RDY to VBUS removal on a hard reset"
+  ],
+  [
+   "tHardResetComplete",
+   "4",
+   "5",
+   "ms",
+   "_ Time from Hard Reset signalling to VBUS removal"
+  ],
+  [
+   "tSinkRequest",
+   "100",
+   "100",
+   "ms",
+   "Time a Sink waits before repeating a Request"
+  ],
+  [
+   "tSourceCapabilityQuery",
+   "40",
+   "50",
+   "ms",
+   "Time from Get Source Cap to Source Capabilities"
+  ],
+  [
+   "tSwapSourceStart",
+   "20",
+   "20",
+   "ms",
+   "_ _ _ Time from Accept of a PR Swap until the new Source starts"
+  ],
+  [
+   "tChunkingNotSupported",
+   "30",
+   "30",
+   "ms",
+   "_ Time a Receiver waits after an unsupported chunked message"
+  ],
+  [
+   "tSoftResetComplete",
+   "15",
+   "15",
+   "ms",
+   "Time to complete a Soft Reset"
+  ],
+  [
+   "tEnterUSB",
+   "10",
+   "15",
+   "ms",
+   "Time from Enter USB to the start of the USB4 entry sequence"
+  ]
+ ],
+ "section_number": "6.6",
+ "bbox": [
+  72.0,
+  653.2000122070312,
+  537.6600036621094,
+  689.7000122070312
+ ],
+ "image_path": null,
+ "element_ids": [
+  "pd:table_caption:3:71",
+  "pd:table_caption:4:77",
+  "pd:section_heading:3:72",
+  "pd:paragraph:3:73",
+  "pd:paragraph:4:111",
+  "pd:paragraph:4:112",
+  "pd:paragraph:4:113"
+ ],
+ "stitched": true,
+ "extractor": "pymupdf"
+}
