@@ -62,10 +62,10 @@ graph refuses an edge without them (5 rejections in the current build, all
 ANSWERED
 Timer: tSenderResponse; Min: 24; Max: 30; Unit: ms; Definition: Maximum time a
 Sender waits before it starts to send a response to a received message
-[pd, §6.6, p.3, Table 6.8] …
+[pd, R3.2 V1.2 (19 Aug 2026), §6.6, p.3, Table 6.8] …
 
   cited sources
-    [pd, §6.6, p.3, Table 6.8]
+    [pd, R3.2 V1.2 (19 Aug 2026), §6.6, p.3, Table 6.8]
 
   trace
     plan      : type=table | sub-questions=1 | expected_documents=any
@@ -84,9 +84,9 @@ Sender waits before it starts to send a response to a received message
                                               Section: §6.6
     get_table        1 hits top=1.000 0.000s  | Timer | Min | Max | Unit | Definition |
                                               | tSenderResponse | 24 | 30 | ms | M…
-    generate         0 hits 2037 tok 0.000s   Timer: tSenderResponse; Min: 24; Max: 30; …
+    generate         0 hits 2056 tok 0.000s   Timer: tSenderResponse; Min: 24; Max: 30; …
 
-    tokens: 2037   latency: 0.04s   model: extractive   tools: 6
+    tokens: 2056   latency: 0.04s   model: extractive   tools: 6
 ```
 
 What the trace shows, and why each part is there:
@@ -135,13 +135,14 @@ flagging off for the ablation that shows what a reviewer would otherwise get.)
 
 ```
 $ curl -s localhost:8000/api/ask -H 'content-type: application/json' \
-    -d '{"question":"What are the limits of tSenderResponse in Table 6.8?"}' | jq '.citations, .tool_calls, .latency_s'
-[
-  "[pd, R3.2 V1.2 (19 Aug 2026), §6.6, p.3, Table 6.8]",
-  "[pd_cts, Revision Q3 2026 (31 May 2026), §5, p.3, Table 5-9]"
-]
-6
-0.039
+    -d '{"question":"What are the limits of tSenderResponse in Table 6.8?"}' \
+  | jq '{citations, tool_calls, latency_s, declined}'
+{
+  "citations": ["[pd, R3.2 V1.2 (19 Aug 2026), §6.6, p.3, Table 6.8]"],
+  "tool_calls": 6,
+  "latency_s": 0.041,
+  "declined": false
+}
 ```
 
 ## Step 5 — the log lines that make it auditable

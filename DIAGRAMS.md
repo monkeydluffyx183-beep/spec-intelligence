@@ -316,7 +316,7 @@ sequenceDiagram
   A->>A: dedup evidence · compose from the table rows
   A->>V: verify(answer, evidence, citations)
   V-->>A: 1 claim, locator ok, numbers 24 and 30 present in the cited table
-  A-->>U: "Table 6.8 gives tSenderResponse a minimum of 24 ms and a maximum of 30 ms. [pd, §6.6, p.4, Table 6.8]"
+  A-->>U: "Table 6.8 gives tSenderResponse a minimum of 24 ms and a maximum of 30 ms. [pd, R3.2 V1.2 (19 Aug 2026), §6.6, p.3, Table 6.8]"
 ```
 
 Every hop in that diagram emits exactly one structured log line (`tool.call`,

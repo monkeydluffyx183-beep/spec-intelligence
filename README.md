@@ -11,7 +11,7 @@ $ specqa ask "What are the limits of tSenderResponse in Table 6.8?"
 ANSWERED
 Timer: tSenderResponse; Min: 24; Max: 30; Unit: ms; Definition: Maximum time a
 Sender waits before it starts to send a response to a received message
-[pd, §6.6, p.3, Table 6.8] …
+[pd, R3.2 V1.2 (19 Aug 2026), §6.6, p.3, Table 6.8] …
 
 $ specqa ask "What is the maximum number of DisplayPort tunnels on a Meteor Lake host?"
 DECLINED (exit 3) — the ingested corpus does not answer this question.

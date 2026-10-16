@@ -300,3 +300,31 @@ def _scalar(value) -> str:
     if text == "" or text.strip() != text or any(c in text for c in ":#{}[],&*?|>%@`\"'"):
         return json.dumps(text)
     return text
+
+def test_citation_marker_carries_the_revision():
+    """The marker format is [doc, revision, §section, p.page, region].
+
+    The table and figure tools synthesise an evidence hit from the artefact, so
+    it is those code paths — not the search index — that decide whether the
+    revision reaches the citation.  Losing it silently degrades every table and
+    figure citation to ``[pd, §6.6, p.3, Table 6.8]``, which is what a reviewer
+    needs to check a superseded revision against.
+    """
+    from specintel.agent.loop import SpecAgent
+    from specintel.agent.tools import citation_from_hit
+
+    table = {"doc_id": "pd", "number": "6.8", "pages": [3, 4], "section_number": "6.6",
+             "markdown": "| Timer | Min | Max |\n| --- | --- | --- |\n| tSenderResponse | 24 | 30 |",
+             "revision": "R3.2 V1.2 (19 Aug 2026)", "stitched": True}
+    hits = SpecAgent._with_table_evidence([], table)
+    assert hits[0].meta["revision"] == "R3.2 V1.2 (19 Aug 2026)"
+    marker = citation_from_hit(hits[0]).to_marker()
+    assert marker == "[pd, R3.2 V1.2 (19 Aug 2026), §6.6, p.3, Table 6.8]", marker
+
+    figure = {"doc_id": "usb4", "number": "4-1", "page": 12, "section_number": "4.2",
+              "caption": "Router topology", "description": "A router and two adapters",
+              "kind": "block", "revision": "USB4 Specification 2.0 (November 2025)"}
+    fhits = SpecAgent._with_figure_evidence([], figure)
+    assert fhits[0].meta["revision"] == "USB4 Specification 2.0 (November 2025)"
+    assert citation_from_hit(fhits[0]).to_marker() == (
+        "[usb4, USB4 Specification 2.0 (November 2025), §4.2, p.12, Figure 4-1]")

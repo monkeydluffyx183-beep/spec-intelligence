@@ -423,7 +423,10 @@ class SpecAgent:
                         text=str(table.get("markdown", "")), element_ids=list(table.get("element_ids") or []),
                         table_id=f"{table.get('doc_id')}:table:{table.get('number')}",
                         meta={"table_number": table.get("number"), "pages": pages,
-                              "stitched": table.get("stitched", False)})
+                              "stitched": table.get("stitched", False),
+                              # the citation marker is [doc, revision, §section, p.page, region];
+                              # without the revision here the marker silently degrades to [doc, §…]
+                              "revision": str(table.get("revision") or "")})
         return [hit] + list(evidence)
 
     @staticmethod
@@ -436,7 +439,8 @@ class SpecAgent:
         hit = SearchHit(chunk_id=chunk_id, doc_id=str(figure.get("doc_id", "")), score=1.0,
                         section_number=str(figure.get("section_number", "")), page=int(figure.get("page") or 0),
                         element_type="figure", text=text, figure_id=figure.get("figure_id"),
-                        meta={"figure_number": figure.get("number"), "kind": figure.get("kind")})
+                        meta={"figure_number": figure.get("number"), "kind": figure.get("kind"),
+                              "revision": str(figure.get("revision") or "")})
         return [hit] + list(evidence)
 
     # ------------------------------------------------------------------ #

@@ -144,7 +144,9 @@ def citation_from_hit(hit: SearchHit) -> Citation:
                   or _number_from_id(hit.table_id, "table")
                   or _number_from_text(hit.text, "table"))
         region = f"Table {number}".strip()
-    elif hit.figure_id:
+    elif hit.figure_id or hit.meta.get("figure_number"):
+        # the number may arrive in meta without an id (synthetic evidence hits built
+        # from the artefact payload) -- the marker must still say "Figure 4-1"
         number = (str(hit.meta.get("figure_number") or "").strip()
                   or _number_from_id(hit.figure_id, "figure")
                   or _number_from_text(hit.text, "figure"))
@@ -382,6 +384,7 @@ class Toolkit:
                               meta={"table_id": table_id})
         payload = {"table_id": table.table_id, "doc_id": table.doc_id, "number": table.number,
                    "caption": table.caption, "section_number": table.section_number, "pages": table.pages,
+                   "revision": getattr(table, "revision", ""),
                    "headers": table.headers, "rows": table.rows, "markdown": table.markdown,
                    "stitched": getattr(table, "stitched", False),
                    "cell_provenance": getattr(table, "cell_provenance", None)}
@@ -397,6 +400,7 @@ class Toolkit:
         payload = {"figure_id": figure.figure_id, "doc_id": figure.doc_id, "number": figure.number,
                    "caption": figure.caption, "kind": figure.kind, "page": figure.page,
                    "section_number": figure.section_number, "description": figure.description,
+                   "revision": getattr(figure, "revision", ""),
                    "ocr_text": getattr(figure, "ocr_text", ""), "image_path": figure.image_path,
                    "structure": getattr(figure, "structure", {}), "labels": getattr(figure, "labels", [])}
         text = "\n".join(x for x in [payload["caption"], payload["description"], payload["ocr_text"]] if x)
