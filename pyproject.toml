@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "specintel"
+version = "0.1.0"
+description = "Multimodal, agentic RAG over USB Power Delivery, USB Type-C, USB4 and Tech 2 specifications"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Spec Intelligence team" }]
+
+# The core pipeline runs on the standard library alone (deterministic CPU
+# fallbacks).  Every optional stack is an extra so that a clean clone can run
+# `ingest -> build-graph -> eval` without a GPU or a network connection.
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["pymupdf>=1.24"]                 # layout parser + page rendering (WS1/WS2)
+dense = ["numpy>=1.26"]                 # vector index math (WS2)
+llm = ["requests>=2.31"]                # Ollama / OpenAI-compatible / vLLM clients
+local = ["transformers>=4.44", "torch>=2.2", "sentence-transformers>=3.0"]  # open-weight models
+ui = ["fastapi>=0.110", "uvicorn>=0.29"]                                    # optional API
+dev = ["pytest>=8.0", "pymupdf>=1.24", "numpy>=1.26", "requests>=2.31"]
+all = [
+  "pymupdf>=1.24", "numpy>=1.26", "requests>=2.31",
+  "pytest>=8.0", "fastapi>=0.110", "uvicorn>=0.29",
+]
+
+[project.scripts]
+specqa = "specintel.agent.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+  "integration: end-to-end vertical slice (slower, needs the synthetic corpus)",
+]

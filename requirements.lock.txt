@@ -1,0 +1,32 @@
+# Pinned versions of the environment the reported numbers were produced in.
+#
+# The core pipeline runs on the standard library alone; every line below is an
+# *optional* extra from pyproject.toml.  Pin them with:
+#     pip install --break-system-packages --user -r requirements.lock.txt
+#
+# Recorded 2026-10-16 on Linux x86-64, Python 3.11.2, 2 vCPU, 3.8 GB RAM, no GPU.
+# Runtime versions of the model adapters (Ollama tags, vLLM build, OCR model
+# revision) are recorded per run in eval/results/summary.json and
+# benchmarks/ocr/results/results.json, not here.
+
+# --- required to run the test suite -------------------------------------------
+pytest==9.1.1
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+
+# --- ingestion: layout parsing and page rendering (extra: pdf) ----------------
+pymupdf==1.28.2
+
+# --- retrieval: vector index math (extra: dense) ------------------------------
+numpy==2.4.6
+
+# --- model clients: Ollama / OpenAI-compatible / vLLM (extra: llm) ------------
+requests==2.34.2
+
+# --- NOT installed here, needed only for the GPU paths ------------------------
+# rapidocr-onnxruntime      # raster OCR backend in benchmarks/ocr/run_bench.py
+# pytesseract               # alternative raster OCR backend
+# transformers / torch      # local open-weight embeddings and VLMs (extra: local)
+# fastapi / uvicorn         # only if the optional FastAPI surface is preferred (extra: ui)
+# vllm                      # serving Unlimited-OCR / a local LLM on a GPU box
